@@ -1,0 +1,5 @@
+.DS_Store
+**/.DS_Store
+
+# three.js source bundle (not needed in repo)
+assets/three.js-master/
