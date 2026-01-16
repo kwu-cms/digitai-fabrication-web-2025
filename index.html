@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>デジタルファブリケーション成果</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="site-title">
+      <h1>環境を観察して機能を追加するデザイン</h1>
+      <h2>授業「デジタルファブリケーション」</h2>
+    </div>
+    <nav class="site-nav">
+      <button id="open-course" class="nav-button" type="button">授業について</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="filters" aria-label="検索とフィルタ">
+      <div class="filter-group">
+        <label for="filter-keyword">キーワード</label>
+        <input id="filter-keyword" type="search" placeholder="作品名・学生名・説明など" />
+      </div>
+      <div class="filter-group">
+        <label for="filter-year">年度</label>
+        <select id="filter-year">
+          <option value="">すべて</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filter-tags">タグ</label>
+        <select id="filter-tags" multiple size="4"></select>
+        <small>複数選択可（Ctrl / ⌘）</small>
+      </div>
+    </section>
+
+    <section class="summary" aria-live="polite">
+      <span id="result-count">0 件</span>
+    </section>
+
+    <section id="cards" class="card-grid" aria-label="作品一覧"></section>
+  </main>
+
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal-close" data-close="true" aria-label="閉じる">×</button>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="course-modal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="course-title">
+      <button class="modal-close" data-close="true" aria-label="閉じる">×</button>
+      <div class="modal-body" id="course-body">
+        <h2 id="course-title">授業について</h2>
+        <section class="course-section">
+          <h3>授業について</h3>
+          <p>
+            本授業では、3DプリンタとTinkercadを中心にデジタルファブリケーションの基礎を学びます。
+            造形手法の習得に加え、設計の意図と結果の関係を整理する姿勢を重視します。
+            試行錯誤の記録や改善の過程に目を向け、制作の判断を言語化できるようにします。
+            作品の共有や撮影も行い、学びのプロセスを可視化します。
+          </p>
+        </section>
+        <section class="course-section">
+          <h3>課題「身の回りを観察して機能や意味を追加する造形物をデザインする」</h3>
+          <p>
+            学内の教室や共用スペースなど実在の環境を観察し、既存の空間やモノに新しい機能や意味を加える造形を考えます。
+            実際の使われ方や状況に基づいて設計し、無理なく機材で制作できる範囲に落とし込むことを重視します。
+            形の面白さだけでなく、どのような判断でその形に至ったかを説明できることを目標とします。
+            そのための試作と改善の過程を丁寧に振り返り、発表では背景と検討を簡潔に共有します。
+          </p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script type="importmap">
+      {
+        "imports": {
+          "three": "/assets/vendor/three/three.module.min.js"
+        }
+      }
+    </script>
+  <script type="module" src="assets/stl-viewer.js"></script>
+  <script type="module" src="assets/app.js"></script>
+</body>
+
+</html>

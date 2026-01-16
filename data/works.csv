@@ -1,0 +1,3 @@
+id,title,student,year,department,tags,description,image,stl,tinkercad
+001,Bunny,山田太郎,2025,プロダクトデザイン,3dprint|sample,"STLビューアのサンプル表示用データ。",assets/images/sample-lamp.jpg,assets/stl/Bunny.stl,https://www.tinkercad.com/things/example1
+002,キーホルダー,佐藤花子,2025,情報デザイン,3dprint|accessory,"3Dプリントで作成したアクリルキーホルダー。",assets/images/sample-keyholder.jpg,assets/stl/sample-keyholder.stl,https://www.tinkercad.com/things/example2
