@@ -6,9 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>デジタルファブリケーション成果</title>
   <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 </head>
 
 <body>
+  <div id="bg-collage" aria-hidden="true"></div>
   <header class="site-header">
     <button id="site-home" class="site-title site-home" type="button" aria-label="トップへ戻る">
       <h1>環境を観察して機能を追加するデザイン</h1>
@@ -22,7 +24,7 @@
   <main class="container">
     <section class="pdf-section" aria-label="PDFビューア">
       <div class="pdf-header">
-        <h3>PDFビューア</h3>
+        <h3>制作物の発表資料</h3>
         <span id="pdf-title" class="pdf-title">PDFを選択してください</span>
       </div>
       <div class="pdf-frame">
@@ -36,7 +38,6 @@
           </div>
           <div class="pdf-item pdf-current">
             <img id="pdf-image" alt="PDF表紙" loading="lazy" />
-            <button id="pdf-open" class="pdf-open" type="button">PDFを開く</button>
           </div>
           <div class="pdf-item pdf-next">
             <img id="pdf-image-next" alt="次のPDF" loading="lazy" />
@@ -129,7 +130,7 @@
         </div>
         <div class="pdf-modal-controls">
           <button id="pdf-page-prev" type="button">前へ</button>
-          <span id="pdf-page-indicator">1 / 1</span>
+          <span id="pdf-page-indicator">1</span>
           <button id="pdf-page-next" type="button">次へ</button>
         </div>
       </div>

@@ -132,6 +132,7 @@ import { STLLoader } from "./vendor/three/STLLoader.js";
             (geometry) => {
                 const material = new THREE.MeshStandardMaterial({ color: 0x3b82f6 });
                 mesh = new THREE.Mesh(geometry, material);
+                mesh.scale.setScalar(1.5);
                 mesh.rotation.x = -Math.PI / 2;
                 geometry.center();
                 scene.add(mesh);
