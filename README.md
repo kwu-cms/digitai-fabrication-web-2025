@@ -101,3 +101,4 @@ python3 scripts/pdf_firstpage_to_png.py
 - 画像やSTLが未設定でも動作します（プレースホルダー画像を参照）
 - Tinkercadは外部リンクのみです
 - STLビューアはThree.jsをローカル配置で読み込みます
+# digitai-fabrication-web-2025
