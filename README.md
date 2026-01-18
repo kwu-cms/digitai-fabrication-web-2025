@@ -5,7 +5,7 @@
 ## 使い方
 
 1. `data/works.csv` を編集します。
-2. 画像は `assets/images/`、STLは `assets/stl/` に配置します。
+2. 画像は `images/`、STLは `stl/` に配置します。
 3. `index.html` をブラウザで開いて確認します。
 
 ## CSVスキーマ
@@ -16,9 +16,21 @@
 id,title,student,year,department,tags,description,image,stl,tinkercad
 ```
 
-- `image` / `stl` はリポジトリ内の相対パス（例: `assets/images/xxx.jpg`）
+- `image` / `stl` はリポジトリ内の相対パス（例: `images/xxx.jpg`）
 - `tags` は `|` 区切り（例: `laser|3dprint`）
 - `tinkercad` は外部リンク（埋め込みなし）
+
+## データの読み込み元
+
+既定では Google スプレッドシートの CSV を読み込みます。
+
+- URL: `https://docs.google.com/spreadsheets/d/15SRnybSLKdCLuzwIFPHIurAHXj1NhFF0wgbODZ3-y9U/edit?usp=sharing`
+
+GitHub Pages 上で `data/works.csv` を使う場合は、`assets/app.js` の `sheetId` を空にしてください。
+
+```js
+const sheetId = "";
+```
 
 ## GitHub Pages 公開
 
@@ -50,7 +62,7 @@ PowerPoint（.pptx）をPDFに一括変換するスクリプトです。
 ### 実行例（pptx2pdf.py）
 
 ```bash
-python3 pptx2pdf.py <フォルダパス>
+python3 scripts/pptx2pdf.py <フォルダパス>
 ```
 
 指定したフォルダ内の `.pptx` をすべて `pdf` に変換し、同じフォルダに出力します。
@@ -70,7 +82,7 @@ pip install pymupdf pillow
 ### 実行例（pdf_firstpage_to_png.py）
 
 ```bash
-python3 pdf_firstpage_to_png.py
+python3 scripts/pdf_firstpage_to_png.py
 ```
 
 ### 出力先

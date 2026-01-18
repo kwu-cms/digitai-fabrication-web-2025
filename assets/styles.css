@@ -115,6 +115,37 @@ a {
   cursor: pointer;
 }
 
+.hero-portraits {
+  max-width: 1100px;
+  margin: 16px auto 0;
+  padding: 0 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.course-section .hero-portraits {
+  margin: 12px 0 18px;
+  padding: 0;
+}
+
+.portrait-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  justify-items: center;
+}
+
+.portrait-grid img {
+  width: 100%;
+  max-width: 240px;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 10px 24px rgba(16, 24, 40, 0.18);
+  background: #ffffff;
+  display: block;
+}
+
 .container {
   max-width: 1100px;
   margin: 0 auto;
@@ -490,6 +521,7 @@ a {
   z-index: 2;
   max-height: 80vh;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .modal-close {
@@ -579,19 +611,24 @@ a {
   left: 50%;
   width: 70%;
   height: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.18);
-  background: #ffffff;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
   transition: transform 0.5s ease, opacity 0.25s ease;
 }
 
 .modal-item img {
-  width: 100%;
-  height: 100%;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: contain;
   display: block;
-  background: #f0f2f5;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.18);
+  background: transparent;
 }
 
 .modal-item.modal-current {
@@ -735,6 +772,14 @@ a {
 @media (max-width: 600px) {
   .site-title h1 {
     font-size: 22px;
+  }
+
+  .portrait-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .portrait-grid img {
+    max-width: 320px;
   }
 
   .filters {

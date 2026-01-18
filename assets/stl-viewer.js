@@ -12,6 +12,7 @@ import { STLLoader } from "./vendor/three/STLLoader.js";
     let animationId = null;
     let resizeObserver = null;
     let axesHelper = null;
+    let environmentMap = null;
 
     const setRendererSize = () => {
         if (!renderer || !container || !camera) return;
@@ -70,6 +71,10 @@ import { STLLoader } from "./vendor/three/STLLoader.js";
             }
             mesh = null;
         }
+        if (environmentMap) {
+            environmentMap.dispose();
+            environmentMap = null;
+        }
         if (renderer) {
             renderer.dispose();
             if (renderer.domElement && renderer.domElement.parentNode) {
@@ -80,6 +85,25 @@ import { STLLoader } from "./vendor/three/STLLoader.js";
         scene = null;
         camera = null;
         container = null;
+    };
+
+    const buildEnvironmentMap = () => {
+        const size = 256;
+        const canvas = document.createElement("canvas");
+        canvas.width = size * 2;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return null;
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, "#e2e8f0");
+        gradient.addColorStop(0.5, "#f8fafc");
+        gradient.addColorStop(1, "#94a3b8");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.mapping = THREE.EquirectangularReflectionMapping;
+        texture.colorSpace = THREE.SRGBColorSpace;
+        return texture;
     };
 
     const render = ({ containerId, url }) => {
@@ -126,13 +150,27 @@ import { STLLoader } from "./vendor/three/STLLoader.js";
         axesHelper = new THREE.AxesHelper(80);
         scene.add(axesHelper);
 
+        environmentMap = buildEnvironmentMap();
+        if (environmentMap) {
+            scene.environment = environmentMap;
+        }
+
         const loader = new STLLoader();
         loader.load(
             url,
             (geometry) => {
-                const material = new THREE.MeshStandardMaterial({ color: 0x3b82f6 });
+                const material = new THREE.MeshNormalMaterial();
                 mesh = new THREE.Mesh(geometry, material);
-                mesh.scale.setScalar(1.5);
+                geometry.computeBoundingBox();
+                const box = geometry.boundingBox;
+                if (box) {
+                    const size = new THREE.Vector3();
+                    box.getSize(size);
+                    const maxDim = Math.max(size.x, size.y, size.z) || 1;
+                    const targetMax = 120;
+                    const scale = targetMax / maxDim;
+                    mesh.scale.setScalar(scale);
+                }
                 mesh.rotation.x = -Math.PI / 2;
                 geometry.center();
                 scene.add(mesh);
