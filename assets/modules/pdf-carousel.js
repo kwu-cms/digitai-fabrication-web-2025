@@ -17,22 +17,54 @@ export const buildPdfViewer = ({ items, elements, openPdfModal }) => {
 
     if (pdfItems.length === 0) {
         elements.pdfTitle.textContent = "PDFがありません";
-        elements.pdfImage.removeAttribute("src");
-        elements.pdfImagePrev.removeAttribute("src");
-        elements.pdfImageNext.removeAttribute("src");
-        elements.pdfImagePrev2.removeAttribute("src");
-        elements.pdfImageNext2.removeAttribute("src");
         elements.pdfList.innerHTML = "";
-        elements.pdfPrev.disabled = true;
-        elements.pdfNext.disabled = true;
         return;
     }
 
     let currentIndex = 0;
     let idleTimer = null;
     let autoTimer = null;
-    let isAnimating = false;
 
+    // Slick.js用のスライドHTMLを生成
+    const createSlides = () => {
+        return pdfItems.map((item, index) => {
+            return `
+                <div class="pdf-slide" data-index="${index}">
+                    <img src="${item.thumb}" alt="${item.title}" loading="lazy" />
+                </div>
+            `;
+        }).join("");
+    };
+
+    // カルーセルを初期化
+    const $carousel = $(elements.pdfCarousel);
+    $carousel.html(createSlides());
+
+    // Slick.jsを初期化
+    $carousel.slick({
+        centerMode: true,
+        centerPadding: "10%",
+        slidesToShow: 1,
+        infinite: true,
+        speed: 650,
+        cssEase: "ease",
+        prevArrow: '<button type="button" class="pdf-overlay prev" aria-label="前のPDF">‹</button>',
+        nextArrow: '<button type="button" class="pdf-overlay next" aria-label="次のPDF">›</button>',
+        dots: false,
+        adaptiveHeight: false,
+        focusOnSelect: true,
+    });
+
+    // スライド変更時のイベント
+    $carousel.on("afterChange", (event, slick, currentSlide) => {
+        currentIndex = currentSlide;
+        const current = pdfItems[currentIndex];
+        elements.pdfTitle.textContent = current.title;
+        renderDots();
+        resetIdleTimer();
+    });
+
+    // ドットをレンダリング
     const renderDots = () => {
         elements.pdfList.innerHTML = pdfItems
             .map(
@@ -42,81 +74,32 @@ export const buildPdfViewer = ({ items, elements, openPdfModal }) => {
             .join("");
     };
 
-    const setPdf = (nextIndex) => {
-        currentIndex = (nextIndex + pdfItems.length) % pdfItems.length;
-        const current = pdfItems[currentIndex];
-        const prev = pdfItems[(currentIndex - 1 + pdfItems.length) % pdfItems.length];
-        const next = pdfItems[(currentIndex + 1) % pdfItems.length];
-        const prev2 = pdfItems[(currentIndex - 2 + pdfItems.length) % pdfItems.length];
-        const next2 = pdfItems[(currentIndex + 2) % pdfItems.length];
-        elements.pdfTitle.textContent = current.title;
-        elements.pdfImage.setAttribute("src", current.thumb);
-        elements.pdfImagePrev.setAttribute("src", prev.thumb);
-        elements.pdfImageNext.setAttribute("src", next.thumb);
-        elements.pdfImagePrev2.setAttribute("src", prev2.thumb);
-        elements.pdfImageNext2.setAttribute("src", next2.thumb);
-        elements.pdfImage.onclick = () => openPdfModal(elements, current.pdf, current.title);
-        elements.pdfImagePrev.onclick = () => openPdfModal(elements, prev.pdf, prev.title);
-        elements.pdfImageNext.onclick = () => openPdfModal(elements, next.pdf, next.title);
-        elements.pdfImagePrev2.onclick = () => openPdfModal(elements, prev2.pdf, prev2.title);
-        elements.pdfImageNext2.onclick = () => openPdfModal(elements, next2.pdf, next2.title);
-        renderDots();
-    };
+    // 初期表示
+    const current = pdfItems[0];
+    elements.pdfTitle.textContent = current.title;
+    renderDots();
 
-    const animateCarousel = (direction) => {
-        if (!elements.pdfCarousel || isAnimating) return Promise.resolve();
-        const currentEl = elements.pdfCarousel.querySelector(".pdf-item.pdf-current");
-        const targetEl = elements.pdfCarousel.querySelector(
-            direction === "prev" ? ".pdf-item.pdf-prev" : ".pdf-item.pdf-next",
-        );
-        if (!currentEl || !targetEl) return Promise.resolve();
+    // スライドのクリックイベント（PDFモーダルを開く）
+    $carousel.on("click", ".pdf-slide", function() {
+        const slideIndex = $(this).data("index");
+        const item = pdfItems[slideIndex];
+        openPdfModal(elements, item.pdf, item.title);
+    });
 
-        const currentRect = currentEl.getBoundingClientRect();
-        const targetRect = targetEl.getBoundingClientRect();
-        const distance = targetRect.left - currentRect.left;
-        if (!distance) return Promise.resolve();
-
-        isAnimating = true;
-        const translateX = -distance;
-        const carousel = elements.pdfCarousel;
-        const duration = 700;
-
-        return new Promise((resolve) => {
-            const cleanup = () => {
-                carousel.removeEventListener("transitionend", onEnd);
-                carousel.style.transition = "none";
-                carousel.style.transform = "translateX(0)";
-                isAnimating = false;
-                resolve();
-            };
-
-            const onEnd = (event) => {
-                if (event.propertyName === "transform") {
-                    cleanup();
-                }
-            };
-
-            carousel.addEventListener("transitionend", onEnd);
-            carousel.style.transition = `transform ${duration}ms cubic-bezier(0.22, 1, 0.36, 1)`;
-            carousel.style.transform = `translateX(${translateX}px)`;
-
-            window.setTimeout(cleanup, duration + 50);
-        });
-    };
-
-    const userAction = (direction) => {
-        animateCarousel(direction).then(() => {
-            setPdf(direction === "prev" ? currentIndex - 1 : currentIndex + 1);
-        });
-        resetIdleTimer();
-    };
+    // ドットクリックイベント
+    elements.pdfList.addEventListener("click", (event) => {
+        const target = event.target;
+        if (target instanceof HTMLButtonElement && target.dataset.index) {
+            const nextIndex = Number(target.dataset.index);
+            $carousel.slick("slickGoTo", nextIndex);
+            resetIdleTimer();
+        }
+    });
 
     const startAuto = () => {
         if (autoTimer) return;
         autoTimer = window.setInterval(() => {
-            animateCarousel("next").then(() => {
-                setPdf(currentIndex + 1);
-            });
+            $carousel.slick("slickNext");
         }, 6000);
     };
 
@@ -135,20 +118,5 @@ export const buildPdfViewer = ({ items, elements, openPdfModal }) => {
         }, 10000);
     };
 
-    elements.pdfPrev.addEventListener("click", () => userAction("prev"));
-    elements.pdfNext.addEventListener("click", () => userAction("next"));
-    elements.pdfList.addEventListener("click", (event) => {
-        const target = event.target;
-        if (target instanceof HTMLButtonElement && target.dataset.index) {
-            const nextIndex = Number(target.dataset.index);
-            const direction = nextIndex === currentIndex ? "next" : nextIndex > currentIndex ? "next" : "prev";
-            animateCarousel(direction).then(() => {
-                setPdf(nextIndex);
-            });
-            resetIdleTimer();
-        }
-    });
-
-    setPdf(0);
     resetIdleTimer();
 };

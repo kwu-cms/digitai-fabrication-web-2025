@@ -194,81 +194,82 @@ a {
   position: relative;
 }
 
+/* Slick.js用のスタイル */
 .pdf-carousel {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
+.pdf-carousel .slick-list {
+  height: 100%;
+}
 
-.pdf-item {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 56%;
+.pdf-carousel .slick-track {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.pdf-carousel .slick-slide {
+  height: auto;
+  padding: 0 12px;
+}
+
+.pdf-slide {
+  width: 100%;
   height: 80%;
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 12px 30px rgba(16, 24, 40, 0.18);
   background: #ffffff;
-  transition: transform 0.65s ease, opacity 0.25s ease;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-.pdf-item img {
+.pdf-slide img {
   width: 100%;
   height: 100%;
   border: 0;
   object-fit: cover;
+  display: block;
 }
 
-.pdf-item.pdf-current {
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  opacity: 1;
+/* Slick.jsの矢印ボタン */
+.pdf-carousel .slick-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: rgba(16, 24, 40, 0.8);
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 1;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.pdf-item.pdf-prev {
-  transform: translate(calc(-50% - (100% + var(--pdf-gap, 24px))), -50%);
-  opacity: 0.6;
+.pdf-carousel .slick-arrow:hover {
+  background: rgba(16, 24, 40, 0.9);
 }
 
-.pdf-item.pdf-next {
-  transform: translate(calc(-50% + (100% + var(--pdf-gap, 24px))), -50%);
-  opacity: 0.6;
+.pdf-carousel .slick-arrow.slick-prev {
+  left: 10px;
 }
 
-.pdf-item.pdf-prev2 {
-  transform: translate(calc(-50% - (200% + (var(--pdf-gap, 24px) * 2))), -50%);
-  opacity: 0.35;
+.pdf-carousel .slick-arrow.slick-next {
+  right: 10px;
 }
 
-.pdf-item.pdf-next2 {
-  transform: translate(calc(-50% + (200% + (var(--pdf-gap, 24px) * 2))), -50%);
-  opacity: 0.35;
-}
-
-.pdf-carousel.move-next .pdf-item.pdf-prev {
-  transform: translate(-170%, -50%);
-}
-
-.pdf-carousel.move-next .pdf-item.pdf-current {
-  transform: translate(-150%, -50%);
-}
-
-.pdf-carousel.move-next .pdf-item.pdf-next {
-  transform: translate(-30%, -50%);
-}
-
-.pdf-carousel.move-prev .pdf-item.pdf-prev {
-  transform: translate(30%, -50%);
-}
-
-.pdf-carousel.move-prev .pdf-item.pdf-current {
-  transform: translate(50%, -50%);
-}
-
-.pdf-carousel.move-prev .pdf-item.pdf-next {
-  transform: translate(170%, -50%);
+.pdf-carousel .slick-arrow:before {
+  display: none;
 }
 
 
